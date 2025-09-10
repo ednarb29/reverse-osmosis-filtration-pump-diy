@@ -26,7 +26,7 @@ My final system looked like shown in the following two images:
 
 ## Schema
 
-Here is the overview of how the valves are employed in the filtration process. (The valve numbering is from the original repository and changed in my code - see pictures above.)
+Here is the overview of how the valves are used in the filtration process. (The valve numbering is from the original repository and changed in my code - see pictures above.)
 
 ![Schema of the DIY reverse osmosis system with automatization features](images/schema.png)
 
@@ -34,23 +34,23 @@ Here is the overview of how the valves are employed in the filtration process. (
 ## Hardware parts
 
 For the full system, I used the following hardware parts:
+- A reverse osmosis system such as the [Aquamichel Mini](https://www.lebendiges-trinkwasser.shop/shop/aquamichel-mini-teileset/)
+- [A self-priming pump 24V](https://www.lebendiges-trinkwasser.shop/shop/pumpe-selbstsaugend-24v-dc/)
+- A [pressure gauge](https://www.tooler.de/catalog/product/view/id/263682/) or [this pressure gauge](https://fittingstore.de/products/einbaumanometer-mit-dreikant-frontring-waagerecht) and other connectors for the pump threads etc.
+- 24V power supply - I used the [24V 3A Power Supply AveyLum Power](https://amzn.eu/d/cPehZDK)
+- A portable box for the whole system to carry and use in a camper etc - I used the [Eurobox NextGen Portable Transport Case, 400 x 300 x 185 mm](https://amzn.eu/d/fMdq8dy)
 
-- Raspberry Pi Pico (or other platform running MicroPython) - I employed [Ingcool Pre-soldered Raspberry Pi Pico Board](https://amzn.eu/d/3YGQunV)
-- 4 valves for controlling water flow - I employed [Solenoid Valve 1/4" DC 24V N/C Normally Closed](https://amzn.eu/d/3zT5nzD) by Gredia.
+
+- Raspberry Pi Pico (or other platform running MicroPython) - I used [Ingcool Pre-soldered Raspberry Pi Pico Board](https://amzn.eu/d/3YGQunV)
+- 4 valves for controlling water flow - I used [Solenoid Valve 1/4" DC 24V N/C Normally Closed](https://amzn.eu/d/3zT5nzD) by Gredia.
 - Relais module for controlling the valves - I used the [4 channel DC 5V relais module](https://amzn.eu/d/0UkmHZb) by ELEGOO.
 - Relais module for controlling the pump - I used the [1-relay, 5V, KY-019 Parent relay](https://amzn.eu/d/h1QWOz9) by AZDelivery.
-- Button for user interaction - I employed a [simple button](https://amzn.eu/d/iUaOajc).
-- Buzzer for audio feedback - I employed the [KY-006 Passive Piezo Buzzer](https://amzn.eu/d/e9L0oB6) by AZDelivery.
-- 24V power supply
-- DC-DC Step-down converter module to provide the correct voltage for the Raspberry Pi Pico (taking it from the 24V power supply) - I employed the [LM2596S DC-DC Power Supply Adapter Step Down](https://amzn.eu/d/2kVXOn0) by AZDelivery.
+- Button for user interaction - I used a [simple button](https://amzn.eu/d/iUaOajc).
+- Buzzer for audio feedback - I used the [KY-006 Passive Piezo Buzzer](https://amzn.eu/d/e9L0oB6) by AZDelivery.
+- DC-DC Step-down converter module to provide the correct voltage for the Raspberry Pi Pico (taking it from the 24V power supply) - I used the [LM2596S DC-DC Power Supply Adapter Step Down](https://amzn.eu/d/2kVXOn0) by AZDelivery.
 - A Raspberry Pi Pico Screw Expansion Board - I used the [GPIO Expansion Board](https://amzn.eu/d/49239PA).
-- A suitable case - I employed the waterproofed [Transparent 200 x 120 x 56 Industrial Housing IP66](https://amzn.eu/d/aowSbms) along with a thin wooden plate on which I could mount the modules to with screws.
-- A set of screws for the different modules.
-- A reverse osmosis system such as the [Aquamichel Mini](https://www.lebendiges-trinkwasser.shop/shop/aquamichel-mini-teileset/).
-- [A self-priming pump 24V](https://www.lebendiges-trinkwasser.shop/shop/pumpe-selbstsaugend-24v-dc/).
+- A suitable case - I used the waterproofed [Transparent 200 x 120 x 56 Industrial Housing IP66](https://amzn.eu/d/aowSbms) along with a thin wooden plate on which I could mount the modules to with screws.
 - [1/4" tubes and connectors](https://amzn.eu/d/1vY9WBC).
-- A [pressure gauge](https://www.tooler.de/catalog/product/view/id/263682/) and other connectors for the pump threads etc.
-
 
 ## Configuration
 

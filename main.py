@@ -26,10 +26,11 @@ import ujson
 # These settings are used for various timing operations in the script and can be overridden by an external configuration file.
 CONFIG_FILE = 'config.json'  # Name of the external configuration file.
 CONFIG = {
-    'pre_flush_sec': 10,          # Time in seconds for the pre-flush operation of the membrane. Default: 10s
-    'post_flush_sec': 30,          # Time in seconds for the post-flush operation of the membrane. Default: 30s
-    'disposal_sec': 60,       # Time in seconds for the disposal operation of the first filtered water. Default: 60s
-    'filter_sec': 12 * 60,        # Time in seconds for the filter operation. Default: 120s
+    'pre_flush_sec': 10,        # Time in seconds for the pre-flush operation of the membrane. Default: 10s
+    'post_flush_sec': 30,       # Time in seconds for the post-flush operation of the membrane. Default: 30s
+    'long_flush_sec': 15 * 60,  # Time in seconds for the long-flush operation of the membrane. Default: 15 min
+    'disposal_sec': 60,         # Time in seconds for the disposal operation of the first filtered water. Default: 60s
+    'filter_sec': 12 * 60,      # Time in seconds for the filter operation. Default: 120s
     'auto_flush_sec': 8 * 60 * 60,  # Time in seconds between automatic flushing (Default 8 hours).
     'water_clean_sec': 5 * 60,      # Time in seconds for water cleaning operation. Default: 5 min
     'buzzer_frequency': 1500,       # Frequency in Hz for the buzzer tone. Default 2000 Hz
@@ -37,17 +38,18 @@ CONFIG = {
                                         # Default: 1000ms
 }
 
-# COnfiguration values only for testing
+# Configuration values only for testing
 # CONFIG = {
-#     'pre_flush_sec': 10,          # Time in seconds for the pre-flush operation of the membrane. Default: 10s
-#     'post_flush_sec': 10,          # Time in seconds for the post-flush operation of the membrane. Default: 30s
+#     'pre_flush_sec': 10,      # Time in seconds for the pre-flush operation of the membrane. Default: 10s
+#     'post_flush_sec': 10,     # Time in seconds for the post-flush operation of the membrane. Default: 30s
+#     'long_flush_sec': 15,     # Time in seconds for the long-flush operation of the membrane. Default: 15 min
 #     'disposal_sec': 10,       # Time in seconds for the disposal operation of the first filtered water. Default: 60s
-#     'filter_sec': 10,        # Time in seconds for the filter operation. Default: 120s
-#     'auto_flush_sec': 60,  # Time in seconds between automatic flushing (Default 8 hours).
-#     'water_clean_sec': 10,      # Time in seconds for water cleaning operation. Default: 5 min
-#     'buzzer_frequency': 1000,       # Frequency in Hz for the buzzer tone. Default 2000 Hz
-#     'pump_switch_delay': 1000       # Time in milliseconds to delay pump switch actions before/after valves.
-#                                         # Default: 1000ms
+#     'filter_sec': 10,         # Time in seconds for the filter operation. Default: 120s
+#     'auto_flush_sec': 60,         # Time in seconds between automatic flushing (Default 8 hours).
+#     'water_clean_sec': 10,        # Time in seconds for water cleaning operation. Default: 5 min
+#     'buzzer_frequency': 1000,     # Frequency in Hz for the buzzer tone. Default 2000 Hz
+#     'pump_switch_delay': 1000     # Time in milliseconds to delay pump switch actions before/after valves.
+#                                       # Default: 1000ms
 # }
 
 # GPIO pin setup for various components connected to the microcontroller.
@@ -201,6 +203,18 @@ def close_valves():
     _set_valves(False, False, False, False)
 
 
+def close_inlet_valve():
+    """
+    Closes the inlet valve and keeps other valves open do drain all remaining pressure from the system.
+    """
+
+    if PIN_PUMP.value():
+        print('Pump has not been turned off yet. Safety shut down!')
+        PIN_PUMP.value(False)
+
+    _set_valves(False, True, False, False)
+
+
 def set_valves_to_flush():
     """
     Configures valves for the flushing operation.
@@ -297,6 +311,16 @@ async def long_beep():
     BUZZER.duty_u16(0)  # Turn buzzer off
 
 
+async def super_long_beep():
+    """
+    Emits a long beep after a long button press.
+    """
+    BUZZER.freq(CONFIG['buzzer_frequency'])  # Set the frequency
+    BUZZER.duty_u16(32768)  # Turn buzzer on with 50% Duty Cycle (Mean fo 16-Bit-Value: 0 bis 65535)
+    await uasyncio.sleep(1)
+    BUZZER.duty_u16(0)  # Turn buzzer off
+
+
 async def auto_flush_filter():
     """
     Asynchronous function to perform an auto flushing operation of the filtration system.
@@ -333,7 +357,12 @@ async def auto_flush_filter():
         await uasyncio.sleep(CONFIG['post_flush_sec'])
 
         set_pump(False)
-        await uasyncio.sleep_ms(CONFIG['pump_switch_delay']*2)
+        await uasyncio.sleep_ms(CONFIG['pump_switch_delay'])
+
+        print('  closing inlet valve!')
+        close_inlet_valve()
+        await uasyncio.sleep_ms(2000)
+
         print('  closing valves!')
         close_valves()
         print('\n')
@@ -404,6 +433,34 @@ async def post_flush_filter():
         last_flush = time.time()
 
 
+async def long_flush_filter():
+    """
+    Asynchronous function to perform a long flushing operation of the filtration system, e.g. after exchanging
+    the membrane and pre-filter stages.
+
+    This function manages the process of flushing the osmosis membrane longer.
+    It controls the valves' states to facilitate these operations and uses asynchronous sleeping to
+    maintain them for configured durations. The operation timestamps and task types are updated accordingly.
+
+    The function uses global variables 'last_flush' and 'running_task_type' to track the time of the last
+    flush and the current type of task being executed, respectively.
+    """
+
+    # Print the operation's starting message and set the current task type.
+    global last_flush, running_task_type
+    running_task_type = 'FLUSHING'        # Update the task type to 'FLUSHING'.
+
+    try:
+        # Start the flushing process of the osmosis membrane.
+        print('  long-flush osmose membrane (' + str(CONFIG['long_flush_sec']) + 's)')
+        set_valves_to_flush()
+        await uasyncio.sleep(CONFIG['long_flush_sec'])
+
+    finally:
+        # Update the timestamp of the last flush and reset the valves to their closed state.
+        last_flush = time.time()
+
+
 async def filter_water(duration_sec=None):
     """
     Asynchronous function to perform water filtering.
@@ -443,8 +500,14 @@ async def filter_water(duration_sec=None):
     finally:
         # Update the timestamp of the last filtering and reset the valves to their closed state.
         await post_flush_filter()
+
         set_pump(False)
-        await uasyncio.sleep_ms(CONFIG['pump_switch_delay']*2)
+        await uasyncio.sleep_ms(CONFIG['pump_switch_delay'])
+
+        print('  closing inlet valve!')
+        close_inlet_valve()
+        await uasyncio.sleep_ms(2000)
+
         print('  closing valves!')
         close_valves()
         last_filtering = time.time()
@@ -479,8 +542,12 @@ async def handle_button():
         ms_duration = ms_end - ms_start
 
         # do the beep
-        long_pressed = ms_duration > 800
-        if long_pressed:
+        super_long_pressed = ms_duration >= 5000
+        long_pressed = 800 < ms_duration < 5000
+        if super_long_pressed:
+            print('Super long button press')
+            await super_long_beep()
+        elif long_pressed:
             print('Long button press')
             await long_beep()
         else:
@@ -488,12 +555,15 @@ async def handle_button():
             await short_beep()
 
         # decide upon the action
-        if not running_task.done():  # running tasks exist
+        if not running_task.done():  # running tasks exists
             print('\n')
             print('Cancel task {}'.format(running_task_type))
             running_task.cancel()  # the running task is always canceled
 
-            if long_pressed and running_task_type == 'FILTERING':
+            if super_long_pressed:
+                print('  long flushing')
+                running_task = event_loop.create_task(long_flush_filter())
+            elif long_pressed and running_task_type == 'FILTERING':
                 # save the new time interval for filtering
                 CONFIG['filter_sec'] = time.time() - start_filtering
                 write_config(CONFIG)
@@ -508,7 +578,10 @@ async def handle_button():
                 running_task = event_loop.create_task(filter_water())
 
         else:  # no running tasks - the system is idle
-            if long_pressed:  # long filter water
+            if super_long_pressed:  # long flushing the membrane
+                running_task = event_loop.create_task(long_flush_filter())
+                print('  long flushing')
+            elif long_pressed:  # long filter water
                 running_task = event_loop.create_task(filter_water(60 * 60))
                 print('  long filtering')
             else:  # short filter water
