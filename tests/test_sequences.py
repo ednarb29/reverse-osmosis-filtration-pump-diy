@@ -83,8 +83,8 @@ def use_fast_config():
         'water_clean_sec': 5 * 60,
         'buzzer_frequency': 1500,
         'pump_switch_delay': 5,  # ms
+        'inlet_bleed_ms': 20,
     })
-    main.INLET_BLEED_MS = 20
     # Default to "very far in the future" so most tests don't see the deferred
     # post-flush fire spuriously. Tests that exercise the deferred path override.
     main.CONFIG['deferred_post_flush_sec'] = 1000.0
@@ -252,7 +252,7 @@ class _SequencingAssertionsMixin:
         pump off while the replacement task immediately turns it back on."""
         pump_evs = [e for e in events if e[0] == 'pin' and e[1] == PIN_PUMP]
         last_off_t = None
-        min_gap_ms = (main.CONFIG['pump_switch_delay'] + main.INLET_BLEED_MS) * 0.7
+        min_gap_ms = (main.CONFIG['pump_switch_delay'] + main.CONFIG['inlet_bleed_ms']) * 0.7
         for e in pump_evs:
             if e[2] == 0:
                 last_off_t = e[3]
@@ -267,7 +267,7 @@ class _SequencingAssertionsMixin:
     def assert_bleed_window_keeps_valve_open(self, events):
         """At the moment the pump turns OFF, at least one valve must be open,
         AND the time between pump-OFF and the moment all valves first become
-        closed must be at least `pump_switch_delay + INLET_BLEED_MS` — that's
+        closed must be at least `pump_switch_delay + inlet_bleed_ms` — that's
         the pressure-bleed window."""
         pin_evs = [e for e in events if e[0] == 'pin']
 
@@ -307,13 +307,13 @@ class _SequencingAssertionsMixin:
         )
 
         window_ms = (all_closed_t - last_pump_off_t) * 1000
-        # Tolerate scheduler jitter: real wait is pump_switch_delay + INLET_BLEED_MS;
+        # Tolerate scheduler jitter: real wait is pump_switch_delay + inlet_bleed_ms;
         # 70% of that is well above any realistic asyncio overhead.
-        min_window = (main.CONFIG['pump_switch_delay'] + main.INLET_BLEED_MS) * 0.7
+        min_window = (main.CONFIG['pump_switch_delay'] + main.CONFIG['inlet_bleed_ms']) * 0.7
         self.assertGreaterEqual(
             window_ms, min_window,
             'pressure-bleed window was only {:.1f} ms; expected >= {:.1f} ms '
-            '(pump_switch_delay + INLET_BLEED_MS)'.format(window_ms, min_window),
+            '(pump_switch_delay + inlet_bleed_ms)'.format(window_ms, min_window),
         )
 
 

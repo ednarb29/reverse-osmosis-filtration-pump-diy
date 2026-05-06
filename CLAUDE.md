@@ -51,9 +51,9 @@ The four valve "modes" are encoded as helper functions, not as a state enum. Eac
 - `close_inlet_valve()` — closes inlet but leaves others open to **bleed system pressure** before fully closing
 - `close_valves()` — all closed (default idle state)
 
-The phased valve closing at the end of every cycle (pump off → wait `pump_switch_delay` → close inlet only → wait `INLET_BLEED_MS` ≈ 2 s → close all) intentionally releases pressure from the membrane and is load-bearing — don't simplify it. It lives in the `_clean_shutdown()` helper which is invoked from the `finally` block of `filter_water`, `auto_flush_filter`, and `long_flush_filter` so cancellation can never leave the pump running.
+The phased valve closing at the end of every cycle (pump off → wait `pump_switch_delay` → close inlet only → wait `inlet_bleed_ms` (default 5 s) → close all) intentionally releases pressure from the membrane and is load-bearing — don't simplify it. It lives in the `_clean_shutdown()` helper which is invoked from the `finally` block of `filter_water`, `auto_flush_filter`, and `long_flush_filter` so cancellation can never leave the pump running.
 
-`INLET_BLEED_MS` is a module-level constant (not in `CONFIG`) so tests can shrink it without changing user-visible config keys.
+`inlet_bleed_ms` lives in `CONFIG` so it can be tuned per install via `config.json` without re-uploading code.
 
 ## Pump-switch ordering invariant
 
@@ -88,12 +88,12 @@ Invariants the suite enforces (any new flow code must preserve them):
 
 1. **Safe end state** — after any exit path (normal completion *or* cancellation), pump=OFF and all valves=CLOSED. ([`TestNormalCompletion`](tests/test_sequences.py), [`TestCancellationSafety`](tests/test_sequences.py))
 2. **No deadhead** — the pump is never ON while all four valves are CLOSED. ([`TestPumpSwitchOrdering`](tests/test_sequences.py))
-3. **Pressure-bleed window** — at the moment the pump turns OFF, at least one valve is open, AND there's at least `pump_switch_delay + INLET_BLEED_MS` between pump-OFF and the first all-valves-closed moment. ([`TestPumpValveSequencing`](tests/test_sequences.py))
+3. **Pressure-bleed window** — at the moment the pump turns OFF, at least one valve is open, AND there's at least `pump_switch_delay + inlet_bleed_ms` between pump-OFF and the first all-valves-closed moment. ([`TestPumpValveSequencing`](tests/test_sequences.py))
 4. **No rapid pump cycling** — after a pump-OFF event, the pump must not turn back ON inside the bleed window. Catches cancel-and-replace races. ([`TestButtonHandler`](tests/test_sequences.py), [`TestDeferredPostFlush`](tests/test_sequences.py))
 5. **Auto-flush respect** — `check_auto_flush` skips when manual mode is active or a deferred post-flush is pending. ([`TestManualMode`](tests/test_sequences.py), [`TestAutoFlushTimer`](tests/test_sequences.py))
 6. **Atomic config persistence** — corrupted `config.json` is tolerated; writes use tmp + rename. ([`TestConfigPersistence`](tests/test_sequences.py))
 
-The fast test config in `tests/test_sequences.py::use_fast_config` shrinks all `*_sec` values to 0.05–0.10 s, `pump_switch_delay` to 5 ms, `INLET_BLEED_MS` to 20 ms, and `DOUBLE_TAP_WINDOW_MS` to 120 ms so the suite finishes in seconds.
+The fast test config in `tests/test_sequences.py::use_fast_config` shrinks all `*_sec` values to 0.05–0.10 s, `pump_switch_delay` to 5 ms, `inlet_bleed_ms` to 20 ms, and `DOUBLE_TAP_WINDOW_MS` to 120 ms so the suite finishes in seconds.
 
 ## Project conventions
 

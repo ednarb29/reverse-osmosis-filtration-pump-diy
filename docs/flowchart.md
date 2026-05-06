@@ -80,13 +80,13 @@ flowchart LR
     D --> E[set_pump False]
     E --> F[wait pump_switch_delay]
     F --> G[close inlet only<br/>V2 stays open as drain]
-    G --> H[wait INLET_BLEED_MS]
+    G --> H[wait inlet_bleed_ms]
     H --> I[close all valves]
 ```
 
 - Valves open BEFORE the pump turns on, never the other way around.
 - The pump turns OFF before any valve change at the end.
-- A bleed window (≥ pump_switch_delay + INLET_BLEED_MS) sits between pump-OFF
+- A bleed window (≥ pump_switch_delay + inlet_bleed_ms) sits between pump-OFF
   and all-valves-closed so residual pressure can escape through V2.
 - This logic lives in `_clean_shutdown()` and is invoked from the `finally`
   block of every flow coroutine — cancellation cannot bypass it.

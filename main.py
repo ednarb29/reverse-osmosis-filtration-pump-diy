@@ -38,9 +38,11 @@ CONFIG = {
                                         # firing in the background. Lower this (e.g. 15) for portable
                                         # use where you want to power off shortly after filtering. (Default: 4 min)
     'buzzer_frequency': 1500,           # Frequency in Hz for the buzzer tone. Default 1500 Hz
-    'pump_switch_delay': 1000           # Time in milliseconds to delay pump switch actions before/after valves.
+    'pump_switch_delay': 1000,          # Time in milliseconds to delay pump switch actions before/after valves.
                                             # Default: 1000ms
-                                            # Default: 1000ms
+    'inlet_bleed_ms': 5000              # How long to leave the non-inlet valves open after the pump stops,
+                                            # to bleed membrane back-pressure through V2 to the drain.
+                                            # Sits between pump-OFF and all-valves-closed. Default: 5000ms.
 }
 
 # Test config
@@ -54,17 +56,14 @@ CONFIG = {
     'water_clean_sec': 30,
     'deferred_post_flush_sec': 30,
     'buzzer_frequency': 1500,
-    'pump_switch_delay': 1000
+    'pump_switch_delay': 1000,
+    'inlet_bleed_ms': 5000
 } """
 
 # Bounds applied when the user saves a new filter duration via long-press during filtering.
 # Prevents accidentally storing a near-zero or absurdly long value.
 FILTER_SEC_MIN = 30
 FILTER_SEC_MAX = 60 * 60
-
-# How long to leave the non-inlet valves open after the pump stops, to bleed
-# system pressure before fully closing. Module-level so tests can shrink it.
-INLET_BLEED_MS = 2000
 
 # Window after a short button press during which a second short press counts as
 # a double-tap. Single short presses get dispatched after this window expires,
@@ -268,7 +267,7 @@ async def _clean_shutdown():
 
     print('  closing inlet valve!')
     close_inlet_valve()
-    await uasyncio.sleep_ms(INLET_BLEED_MS)
+    await uasyncio.sleep_ms(CONFIG['inlet_bleed_ms'])
 
     print('  closing valves!')
     close_valves()

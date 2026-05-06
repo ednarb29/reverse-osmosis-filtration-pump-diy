@@ -71,6 +71,7 @@ The file contains the following parameters:
 - `deferred_post_flush_sec`: Delay in seconds between a filter cycle ending and the membrane post-flush running in the background. Default 180 (3 minutes) for stationary use. For portable / camper use where you want to power down shortly after filtering, lower this (e.g. 15) so the post-flush completes sooner.
 - `buzzer_frequency`: Frequency in Hz for the buzzer tone.
 - `pump_switch_delay`: Time in milliseconds to delay pump switch actions before/after valves.
+- `inlet_bleed_ms`: Time in milliseconds to leave the non-inlet valves open after the pump stops, so membrane back-pressure can bleed through V2 to the drain before all valves close. Default 5000 (5 s). Increase if you hear residual pressure on the next cycle's first valve open.
 
 ## Usage
 
