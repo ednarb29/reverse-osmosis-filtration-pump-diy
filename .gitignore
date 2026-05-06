@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+
+# IDE / editor
+.idea/
+.vscode/
+.micropico
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Generated test artifacts (regenerated from docs/generate_test_checklist.py;
+# .xlsx / .csv are per-test-run working copies, not source of truth)
+docs/hardware_test_checklist.xlsx
+docs/Hardware Tests-Table*.csv
+
+# Manufacturer reference handbooks (kept locally for reference, copyright)
+docs/*.pdf
