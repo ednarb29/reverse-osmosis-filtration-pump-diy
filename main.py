@@ -36,7 +36,7 @@ CONFIG = {
     'water_clean_sec': 5 * 60,          # Time in seconds for water cleaning operation. Default: 5 min
     'deferred_post_flush_sec': 30,  # Delay between a filter cycle ending and the membrane post-flush
                                         # firing in the background. Lower this (e.g. 15) for portable
-                                        # use where you want to power off shortly after filtering. (Default: 4 min)
+                                        # use where you want to power off shortly after filtering. (Default: 30 s)
     'buzzer_frequency': 1500,           # Frequency in Hz for the buzzer tone. Default 1500 Hz
     'pump_switch_delay': 1000,          # Time in milliseconds to delay pump switch actions before/after valves.
                                             # Default: 1000ms

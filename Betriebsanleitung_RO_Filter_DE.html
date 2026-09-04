@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Umkehrosmose-Filter – Kurzanleitung</title>
+<style>
+  :root { --blue:#0e4a78; --teal:#00756e; --ink:#17232b; --pale:#e9f5f8; --green:#e5f6ed; --warn:#fff5c9; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#ddd; color:var(--ink); font:10pt/1.32 Arial,Helvetica,sans-serif; }
+  .page { width:210mm; min-height:297mm; margin:10mm auto; padding:14mm 15mm 13mm; background:white; box-shadow:0 2px 12px #777; position:relative; page-break-after:always; }
+  .page:last-child { page-break-after:auto; }
+  header { margin:-14mm -15mm 7mm; padding:10mm 15mm 7mm; background:var(--blue); color:#fff; }
+  header small { font-weight:bold; letter-spacing:.08em; }
+  h1 { margin:2mm 0 0; font-size:22pt; line-height:1.05; }
+  h2 { margin:5mm 0 3mm; padding-bottom:1.4mm; color:var(--blue); font-size:14pt; border-bottom:1.2pt solid var(--teal); }
+  h3 { margin:0 0 1.5mm; color:var(--blue); font-size:10.5pt; }
+  p { margin:1.5mm 0; }
+  .notice { padding:3.5mm 4mm; background:var(--warn); }
+  .notice strong { display:block; margin-bottom:1mm; font-size:11.5pt; }
+  ol.steps { padding:0; margin:0; counter-reset:step; list-style:none; }
+  ol.steps li { counter-increment:step; position:relative; min-height:8mm; padding:1.3mm 0 1.3mm 10mm; }
+  ol.steps li::before { content:counter(step); position:absolute; left:0; top:1mm; width:7mm; height:7mm; padding-top:1mm; color:#fff; background:var(--teal); text-align:center; font-weight:bold; }
+  table { width:100%; border-collapse:collapse; }
+  th { padding:2mm; color:#fff; background:var(--blue); text-align:left; }
+  td { padding:2mm; border:1px solid #c3d2d8; }
+  tr:nth-child(even) td { background:var(--pale); }
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:3mm; }
+  .card { padding:3mm; background:var(--green); }
+  .card b { display:block; margin-bottom:1mm; color:var(--teal); font-size:9pt; }
+  .wide { margin-bottom:2.5mm; background:var(--pale); }
+  .manual-note { padding:3mm; background:var(--warn); }
+  .flow { display:grid; grid-template-columns:repeat(4,1fr); gap:5mm; margin-top:4mm; }
+  .flow div { position:relative; padding:3mm 2mm; min-height:17mm; background:var(--green); border:1px solid #77a5a8; }
+  .flow div:not(:last-child)::after { content:"→"; position:absolute; right:-5mm; top:5mm; color:var(--teal); font-size:15pt; font-weight:bold; }
+  .flow b { display:block; color:var(--blue); }
+  footer { position:absolute; left:15mm; right:15mm; bottom:8mm; padding-top:2mm; border-top:1px solid #bbb; color:#667; font-size:7.5pt; }
+  footer span { float:right; }
+  @media print {
+    body { background:#fff; }
+    .page { margin:0; box-shadow:none; }
+    @page { size:A4 portrait; margin:0; }
+  }
+</style>
+</head>
+<body>
+<section class="page">
+<header><small>UMKEHROSMOSE-FILTER</small><h1>Kurzanleitung für den täglichen Betrieb</h1></header>
+<div class="notice"><strong>IMMER EINGESCHALTET LASSEN</strong>Die Anlage muss dauerhaft an Strom, Wasser und Abfluss angeschlossen bleiben. Automatische Pumpen- und Ventilgeräusche sind normal.</div>
+<h2>Wasser filtern</h2>
+<ol class="steps">
+<li>Gefäß am Reinwasserauslauf bereitstellen.</li>
+<li>Taster <b>kurz drücken</b> (unter 0,8 s). Ein kurzer Ton bestätigt die Eingabe.</li>
+<li>War die Anlage länger als 5 Minuten unbenutzt, spült sie zunächst 10 s vor und verwirft danach 60 s das erste Wasser.</li>
+<li>Danach filtert sie <b>12 Minuten</b>. Drei lange Töne melden das Ende.</li>
+<li>Vorzeitig stoppen: während der Filterung den Taster <b>kurz drücken</b>.</li>
+<li>Nicht ausschalten: <b>30 s später</b> startet automatisch die Nachspülung (ca. 30 s plus An-/Abschaltzeit).</li>
+</ol>
+<h2>Tastengesten</h2>
+<table><thead><tr><th>Geste</th><th>Eingabe</th><th>Bestätigung</th></tr></thead><tbody>
+<tr><td>Kurz</td><td>unter 0,8 s</td><td>1 kurzer Ton</td></tr>
+<tr><td>Lang</td><td>0,8 bis unter 5 s</td><td>1 langer Ton</td></tr>
+<tr><td>Sehr lang</td><td>mindestens 5 s</td><td>1 sehr langer Ton</td></tr>
+<tr><td>Doppelklick</td><td>2× kurz innerhalb 0,6 s</td><td>2 kurze Töne</td></tr>
+</tbody></table>
+<h2>Aus dem Ruhezustand</h2>
+<div class="cards">
+<div class="card"><b>KURZ</b>Normale Filterung · 12 Minuten</div>
+<div class="card"><b>LANG</b>Filterung für 1 Stunde</div>
+<div class="card"><b>SEHR LANG</b>Lange Membranspülung · 15 Minuten</div>
+<div class="card"><b>DOPPELKLICK</b>Manueller Modus für die Desinfektion</div>
+</div>
+<footer>Kurzanleitung · 6-h-Autospülung / 30-s-Nachspülverzögerung <span>Seite 1/2</span></footer>
+</section>
+
+<section class="page">
+<header><h1>Weitere Bedienfunktionen</h1></header>
+<h2>Während eines laufenden Vorgangs</h2>
+<div class="card wide"><h3>FILTERUNG</h3><b>Kurz:</b> stoppen. &nbsp; <b>Lang:</b> stoppen und die bisherige Laufzeit als neue normale Filterzeit speichern (30 s bis 1 h). &nbsp; <b>Sehr lang:</b> stoppen und 15 min spülen.</div>
+<div class="card wide"><h3>VORSPÜLUNG VOR DEM FILTERN</h3><b>Kurz:</b> überspringen und normal filtern. &nbsp; <b>Lang:</b> überspringen und 1 h filtern. &nbsp; <b>Sehr lang:</b> abbrechen und 15 min spülen.</div>
+<div class="card wide"><h3>EIGENSTÄNDIGE SPÜLUNG</h3><b>Kurz oder lang:</b> abbrechen und in den Ruhezustand zurückkehren. &nbsp; <b>Sehr lang:</b> neue 15-minütige Spülung starten.</div>
+<h2>Manueller Modus – nur zur Desinfektion</h2>
+<p class="manual-note">Chemische Schritte, Mengen und Schutzmaßnahmen: ausschließlich nach der <b>Originalanleitung des AquaMichel Mini</b>. Hier ist nur die Tastersteuerung beschrieben.</p>
+<ol class="steps">
+<li>Im Ruhezustand <b>Doppelklick</b>: manuellen Modus öffnen.</li>
+<li><b>Kurz drücken:</b> Pumpe EIN (ohne Vor- oder Nachspülung).</li>
+<li>Nochmals <b>kurz drücken:</b> Pumpe AUS.</li>
+<li><b>Lang oder sehr lang drücken:</b> manuellen Modus verlassen.</li>
+</ol>
+<p><b>Während des manuellen Modus ist die automatische 6-Stunden-Spülung pausiert. Nach der Desinfektion den manuellen Modus unbedingt verlassen.</b></p>
+<h2>Ablauf auf einen Blick</h2>
+<div class="flow"><div><b>RUHE</b>kurz / lang</div><div><b>FILTERN</b>12 min / 1 h</div><div><b>ENDE</b>3 lange Töne</div><div><b>NACHSPÜLEN</b>nach 30 s</div></div>
+<div class="notice" style="margin-top:6mm"><strong>AUTOMATISCH IM RUHEZUSTAND</strong>Alle 6 Stunden läuft selbstständig eine Pflegespülung. Deshalb Strom, Wasser und Abfluss niemals trennen.</div>
+<footer>Kurzanleitung · 6-h-Autospülung / 30-s-Nachspülverzögerung <span>Seite 2/2</span></footer>
+</section>
+</body>
+</html>
