@@ -32,6 +32,16 @@ Here is the overview of how the valves are used in the filtration process. (The 
 
 ![Schema of the DIY reverse osmosis system with automatization features](images/schema.png)
 
+### Build schematics
+
+For rebuilding the system there are two drawings of my actual build — one for
+every water-carrying part, one for the wiring. Both are available in English and
+German; see [docs/schematics.md](docs/schematics.md).
+
+![Hydraulic schematic](images/hydraulic-en.png)
+
+![Electrical schematic](images/electrical-en.png)
+
 
 ## Hardware parts
 
@@ -84,7 +94,11 @@ To use the script:
 
 ## Button Controls
 
-A printable quick-reference is in [docs/button_reference.md](docs/button_reference.md).
+A printable quick-reference is in [docs/button_reference.md](docs/button_reference.md)
+([deutsch](docs/button_reference.de.md)).
+
+For handing the system to someone who just wants to make water, there is a
+two-page printable guide in [docs/quick-guide/](docs/quick-guide/) — [English](docs/quick-guide/Quick-Guide-EN.pdf) and [Deutsch](docs/quick-guide/Kurzanleitung-DE.pdf).
 
 Four press gestures are recognised:
 

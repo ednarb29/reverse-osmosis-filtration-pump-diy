@@ -1,0 +1,55 @@
+@page { size: A4; margin: 10mm 12mm; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: "DejaVu Sans", "Liberation Sans", Arial, sans-serif;
+  color: #16211c; -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.page { page-break-after: always; }
+.page:last-child { page-break-after: auto; }
+
+h1 { font-size: 26pt; margin: 0 0 1mm 0; letter-spacing: -0.4pt; }
+.sub { font-size: 11.5pt; color: #5a6b62; margin: 0 0 4mm 0; }
+h2 { font-size: 14.5pt; margin: 0 0 2mm 0; padding-bottom: 1mm; border-bottom: 2.5px solid #2e7d5b; }
+
+/* ---------- page 1 ---------- */
+.steps { display: flex; gap: 3.5mm; margin-bottom: 4.5mm; }
+.step { flex: 1; background: #eaf5ef; border-radius: 2.5mm; padding: 3mm 3.5mm 3.5mm; }
+.step .n { font-size: 17pt; font-weight: 700; color: #2e7d5b; line-height: 1; }
+.step .t { font-size: 12pt; font-weight: 700; margin-top: 1mm; }
+.step .d { font-size: 10pt; color: #41544a; margin-top: 0.8mm; line-height: 1.28; }
+
+.legend { display: flex; gap: 3mm; margin-bottom: 4mm; }
+.lg { flex: 1; text-align: center; border: 1.5px solid #cfded6; border-radius: 2.5mm; padding: 2mm 1mm; }
+.lg .sym { font-size: 13pt; letter-spacing: 1.5pt; color: #2e7d5b; font-weight: 700; }
+.lg .nm { font-size: 10.5pt; font-weight: 700; margin-top: 0.6mm; }
+.lg .tm { font-size: 8.5pt; color: #5a6b62; }
+
+table.map { width: 100%; border-collapse: collapse; margin-bottom: 4mm; table-layout: fixed; }
+table.map th, table.map td { border: 1.5px solid #cfded6; padding: 2.4mm 2.4mm; vertical-align: middle; }
+table.map thead th { background: #2e7d5b; color: #fff; font-size: 11pt; text-align: left; }
+table.map thead th.g { width: 34mm; }
+table.map td.g { background: #f4f9f6; font-weight: 700; font-size: 10.5pt; }
+table.map td.g .sym { display: block; font-size: 12pt; color: #2e7d5b; letter-spacing: 1.5pt; }
+table.map td { font-size: 10.5pt; line-height: 1.28; }
+table.map td b { color: #1c5c42; }
+
+table.beep { width: 100%; border-collapse: collapse; }
+table.beep td { border-bottom: 1px solid #dde7e2; padding: 1.85mm 1mm; font-size: 10.5pt; }
+table.beep td.s { width: 52mm; font-weight: 700; color: #2e7d5b; }
+
+.note { margin-top: 4.5mm; background: #fff6e5; border-left: 4px solid #e0a028; padding: 3mm 4mm; font-size: 10pt; line-height: 1.35; }
+
+/* ---------- page 2 ---------- */
+.p2 { font-size: 9.6pt; line-height: 1.32; }
+.p2 h2 { margin-top: 0; }
+.block { margin-bottom: 3.2mm; }
+.block p { margin: 0 0 1.8mm 0; }
+.auto { display: flex; gap: 3mm; }
+.auto div { flex: 1; background: #f4f9f6; border-radius: 2.5mm; padding: 2.2mm 2.8mm; font-size: 9.1pt; line-height: 1.3; }
+.auto div b { display: block; font-size: 10pt; color: #1c5c42; margin-bottom: 1mm; }
+table.proc { width: 100%; border-collapse: collapse; margin: 1mm 0 2mm; }
+table.proc td { border: 1px solid #cfded6; padding: 1.6mm 2.2mm; font-size: 9.8pt; vertical-align: top; }
+table.proc td.k { width: 38mm; background: #f4f9f6; font-weight: 700; }
+.warn { background: #fdecec; border-left: 4px solid #c0392b; padding: 2.5mm 3.5mm; font-size: 9.6pt; line-height: 1.32; }
+.kbd { display: inline-block; background: #eaf5ef; border: 1px solid #b9d6c7; border-radius: 1.5mm; padding: 0.2mm 1.5mm; font-weight: 700; color: #1c5c42; white-space: nowrap; }

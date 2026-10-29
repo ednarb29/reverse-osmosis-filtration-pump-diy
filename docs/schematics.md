@@ -1,0 +1,81 @@
+# Build schematics
+
+Two drawings document the physical build inside the carry case. They are meant
+for someone rebuilding the system from scratch, so they show the parts and the
+connections between them — not the software state machine (that is
+[flowchart.md](flowchart.md)).
+
+Both exist in English and German. The layout is generated from one script, so
+the two language versions are geometrically identical.
+
+| | English | Deutsch |
+|---|---|---|
+| Water-carrying parts | [hydraulic-en.svg](schematics/hydraulic-en.svg) · [PNG](../images/hydraulic-en.png) | [hydraulic-de.svg](schematics/hydraulic-de.svg) · [PNG](../images/hydraulic-de.png) |
+| Wiring | [electrical-en.svg](schematics/electrical-en.svg) · [PNG](../images/electrical-en.png) | [electrical-de.svg](schematics/electrical-de.svg) · [PNG](../images/electrical-de.png) |
+
+![Hydraulic schematic](../images/hydraulic-en.png)
+
+![Electrical schematic](../images/electrical-en.png)
+
+## What the hydraulic drawing records
+
+The flow path, in order: inlet (tap, jerrycan or tank) → grey inline strainer →
+**V1** → tee → booster pump → tee. From that tee one branch runs through the
+adjustable restrictor and back to the pump inlet — that recirculation loop is
+what sets the working pressure. The other branch passes the tee carrying the
+pressure gauge and continues to the carbon filter, then through the tee holding
+the disinfection check valve (blue plug, the H₂O₂ injection point), then the
+sediment filter, then the membrane.
+
+The membrane has two outlets: permeate in the white tube, which tees to **V3**
+(clean water out) and **V4** (discard), and waste water in the red tube, which
+tees to the fixed restrictor + adjustable restrictor chain and to **V2**. All
+three waste paths merge into the single waste outlet on the case.
+
+Two points worth keeping when rebuilding:
+
+- The pre-filter order is carbon → sediment → membrane. That is counterintuitive
+  but it is what the AquaMichel Mini build manual prescribes.
+- **V2 takes the place of the blue ball valve** in the original flush-water
+  system: energising it bypasses both restrictors, which is what makes a flush a
+  flush. The fixed restrictor carries a strainer that keeps scale out of the
+  adjustable one, so keep the two in that order.
+
+## What the electrical drawing records
+
++24 V sits permanently on all four valves and on the pump. Every relay contact
+is in the **negative** line, so an inactive relay leaves its load dead. A black
+switch on the outside of the case sits in the pump's red lead and cuts the pump
+alone.
+
+The relay polarity is not uniform and `main.py` already accounts for it: the
+4-channel board energises on a LOW input (`_set_valves` writes the logical NOT
+of its arguments) while the 1-channel pump relay energises on HIGH (`set_pump`
+does not invert). See the pin map in [CLAUDE.md](../CLAUDE.md).
+
+The drawing also carries two recommendations that the current build does not
+have: a fuse in the +24 V line, and a supply with more headroom — the pump alone
+draws 2.8 A of the 3 A the fitted CJ-2430 provides.
+
+## Regenerating
+
+```bash
+python3 docs/schematics/generate.py
+```
+
+That rewrites the four SVGs in `docs/schematics/`. To refresh the PNGs in
+`images/`, render each SVG at 1.25× device scale, for example with headless
+Chromium:
+
+```bash
+chromium --headless --disable-gpu --screenshot=images/hydraulic-en.png \
+  --window-size=1740,1640 --force-device-scale-factor=1.25 \
+  docs/schematics/hydraulic-en.svg
+```
+
+The electrical drawings use `--window-size=1740,1320`.
+
+Edit text in the `STRINGS` table at the bottom of `generate.py`; edit geometry
+in `build_hydraulic` / `build_electrical`. Keep both languages in step — the
+layout code is shared, so a string that grows too long will overflow in one
+language and not the other.
