@@ -68,7 +68,7 @@ The file contains the following parameters:
 - `filter_sec`: Time in seconds for the filter operation.
 - `auto_flush_sec`: Time in seconds between automatic flushing (Default 8 hours).
 - `water_clean_sec`: Time in seconds within which a follow-up filtration skips the pre-flush.
-- `deferred_post_flush_sec`: Delay in seconds between a filter cycle ending and the membrane post-flush running in the background. Default 180 (3 minutes) for stationary use. For portable / camper use where you want to power down shortly after filtering, lower this (e.g. 15) so the post-flush completes sooner.
+- `deferred_post_flush_sec`: Delay in seconds between a filter cycle ending and the membrane post-flush running in the background. Default 30. Raise it for stationary use if you prefer the post-flush to run well after you have taken your water; lower it (e.g. 15) for portable / camper use where you want to power down shortly after filtering.
 - `buzzer_frequency`: Frequency in Hz for the buzzer tone.
 - `pump_switch_delay`: Time in milliseconds to delay pump switch actions before/after valves.
 - `inlet_bleed_ms`: Time in milliseconds to leave the non-inlet valves open after the pump stops, so membrane back-pressure can bleed through V2 to the drain before all valves close. Default 5000 (5 s). Increase if you hear residual pressure on the next cycle's first valve open.
@@ -125,7 +125,7 @@ While in manual mode:
 
 ### Deferred post-flush
 
-After every filter cycle the membrane post-flush is **scheduled for later** (default `deferred_post_flush_sec` = 180 s, configurable). The pump shuts off and valves close immediately so you can take your water; a short while later the system runs its post-flush in the background. If you start a new cycle before the post-flush fires, the deferred task is cancelled and the new cycle takes over.
+After every filter cycle the membrane post-flush is **scheduled for later** (default `deferred_post_flush_sec` = 30 s, configurable). The pump shuts off and valves close immediately so you can take your water; a short while later the system runs its post-flush in the background. If you start a new cycle before the post-flush fires, the deferred task is cancelled and the new cycle takes over.
 
 For portable / camper-van use, set `deferred_post_flush_sec` to a small value (e.g. 15) in `config.json` so you don't have to wait around to power down.
 

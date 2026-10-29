@@ -37,8 +37,8 @@ from drinking the first stagnant water from the membrane.
 | Super-long   | Stop and start a long flush.                                    |
 
 After every filter cycle the membrane post-flush runs in the background,
-configured by `deferred_post_flush_sec` (default 3 min). Camper / portable
-setups should set this to 15 s in `config.json` so the system is ready to
+configured by `deferred_post_flush_sec` (default 30 s). Camper / portable
+setups can lower this further in `config.json` so the system is ready to
 power down sooner.
 
 ### While the pre-flush is running (before a filter cycle, valves in flush mode)
