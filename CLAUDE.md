@@ -23,6 +23,8 @@ This is **MicroPython** code targeting a **Raspberry Pi Pico**, not standard CPy
 
 **Critical relay polarity gotcha**: the valve relay module is active-low — `_set_valves` writes the **logical NOT** of its arguments, so passing `True` *opens* a valve. The pump relay is the opposite: `set_pump(True)` turns the pump ON. When adding new valve states or new flow modes, always go through `_set_valves(...)` rather than poking pins directly so this inversion stays in one place.
 
+On the hardware side both relay boards sit in the **negative** line of their load; +24 V is permanently present at all four valves and at the pump. The valves are normally closed, so an un-powered or crashed controller leaves the system watertight. Which valve sits where in the water path, and how everything is wired, is documented in [docs/schematics.md](docs/schematics.md).
+
 ## Architecture: two cooperative async loops + a global state machine
 
 The program is structured around `uasyncio`. `main()` arms the hardware watchdog (`machine.WDT`, 8 s) and starts two long-running tasks plus the deferred post-flush mechanism:

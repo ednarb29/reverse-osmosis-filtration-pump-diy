@@ -15,7 +15,7 @@ The system is controlled with one button and offers the following main features:
 
 The script is structured to be asynchronous, allowing it to handle multiple operations efficiently without blocking the main execution flow.
 
-My final system looked like shown in the following two images:
+My final system looks like this:
 
 ![DIY reverse osmosis system with automatization features](images/IMG_4790.jpeg)
 
@@ -25,32 +25,61 @@ My final system looked like shown in the following two images:
 
 ![DIY reverse osmosis system with automatization features](images/IMG_4793.jpeg)
 
+### Inside the case
 
-## Schema
+The four solenoids are marked 1 to 4 in pen on their brackets. Those numbers are
+the ones `main.py` uses, so V1 here is GP0, V2 is GP1, and so on:
 
-Here is the overview of how the valves are used in the filtration process. (The valve numbering is from the original repository and changed in my code - see pictures above.)
+![Which solenoid is which valve](images/build-valves.jpg)
 
-![Schema of the DIY reverse osmosis system with automatization features](images/schema.png)
+The inlet corner: bulkheads through the case wall, the grey inline strainer, and
+the adjustable restrictor that recirculates part of the pump output back to the
+pump inlet to set the working pressure.
 
-### Build schematics
+![Inlet manifold with strainer and adjustable restrictor](images/build-manifold.jpg)
 
-For rebuilding the system there are two drawings of my actual build — one for
-every water-carrying part, one for the wiring. Both are available in English and
-German; see [docs/schematics.md](docs/schematics.md).
+The pump bay: pump inlet on the red tube, pump outlet teeing off to the pressure
+gauge (brass fitting, bottom right) and onward to the carbon filter.
+
+![Pump, tees and pressure gauge](images/build-pump.jpg)
+
+
+## Schematics
+
+Two drawings record the system as it is actually built — one for every
+water-carrying part, one for the wiring. Both exist in English and German and
+are generated from one script; see [docs/schematics.md](docs/schematics.md),
+which also explains how this build differs from the original design this project
+started out from.
 
 ![Hydraulic schematic](images/hydraulic-en.png)
 
 ![Electrical schematic](images/electrical-en.png)
 
+Two things in there are easy to get wrong when rebuilding:
+
+- The pre-filters run **carbon first, then sediment**, then the membrane. That is
+  the order the AquaMichel Mini build manual prescribes.
+- Every relay switches the **negative** line. +24 V sits permanently on all four
+  valves and on the pump, and the two relay boards trigger on opposite levels —
+  which is why `_set_valves` inverts its arguments and `set_pump` does not.
+
 
 ## Hardware parts
 
 For the full system, I used the following hardware parts:
-- A reverse osmosis system such as the [Aquamichel Mini](https://www.lebendiges-trinkwasser.shop/shop/aquamichel-mini-teileset/)
-- [A self-priming pump 24V](https://www.lebendiges-trinkwasser.shop/shop/pumpe-selbstsaugend-24v-dc/)
+- A reverse osmosis system such as the [Aquamichel Mini](https://www.lebendiges-trinkwasser.shop/shop/aquamichel-mini-teileset/). Mine runs a WATER PRO IN10C carbon cartridge, a WATER PRO IN10S 5 µm sediment cartridge and the AquaMichel membrane housing.
+- [A self-priming pump 24V](https://www.lebendiges-trinkwasser.shop/shop/pumpe-selbstsaugend-24v-dc/) - the one fitted is an E-CHEN EC-304-200B, 24 V DC, 2.8 A, up to 2.4 l/min.
 - A [pressure gauge](https://www.tooler.de/catalog/product/view/id/263682/) or [this pressure gauge](https://fittingstore.de/products/einbaumanometer-mit-dreikant-frontring-waagerecht) and other connectors for the pump threads etc.
-- 24V power supply - I used the [24V 3A Power Supply AveyLum Power](https://amzn.eu/d/cPehZDK)
+- 24V power supply - I used the [24V 3A Power Supply AveyLum Power](https://amzn.eu/d/cPehZDK) (label: CJ-2430). The pump alone draws 2.8 A of that, so plan for 5 A if you are buying new, and add a fuse in the +24 V line — mine has none.
 - A portable box for the whole system to carry and use in a camper etc - I used the [Eurobox NextGen Portable Transport Case, 400 x 300 x 185 mm](https://amzn.eu/d/fMdq8dy)
+
+Water-side parts beyond the AquaMichel kit:
+- A grey inline strainer in the inlet, to keep coarse particles out of the valves and the pump.
+- Two adjustable flow restrictors: one recirculating part of the pump output back to the pump inlet (sets the working pressure), one in the waste line (sets the flush rate).
+- The kit's fixed flow restrictor with its built-in sieve, upstream of the adjustable one in the waste line. The sieve is what keeps scale out of the adjustable restrictor, so keep that order.
+- The kit's check valve with the blue plug, teed in after the carbon filter — this is the injection point for the H₂O₂ disinfection procedure.
+- A toggle switch on the outside of the case, wired into the pump's positive lead, to cut the pump independently of the controller.
 
 
 - Raspberry Pi Pico (or other platform running MicroPython) - I used [Ingcool Pre-soldered Raspberry Pi Pico Board](https://amzn.eu/d/3YGQunV)
@@ -71,16 +100,16 @@ You can modify these settings in the configuration file to adapt the system to y
 The file is created if it does not exist. It is persistently stored on the Raspberry Pi Pico.
 
 The file contains the following parameters:
-- `pre_flush_sec`: Time in seconds for the pre-flush operation of the membrane.
-- `post_flush_sec`: Time in seconds for the post-flush operation of the membrane.
+- `pre_flush_sec`: Time in seconds for the pre-flush operation of the membrane (default 10).
+- `post_flush_sec`: Time in seconds for the post-flush operation of the membrane (default 30).
 - `long_flush_sec`: Time in seconds for the long-flush operation (default 15 minutes), triggered by a super-long button press.
-- `disposal_sec`: Time in seconds for the disposal operation of the first filtered water.
-- `filter_sec`: Time in seconds for the filter operation.
+- `disposal_sec`: Time in seconds for the disposal operation of the first filtered water (default 60).
+- `filter_sec`: Time in seconds for the filter operation (default 12 minutes). A long press during filtering overwrites this with the elapsed time.
 - `auto_flush_sec`: Time in seconds between automatic flushing (Default 8 hours).
-- `water_clean_sec`: Time in seconds within which a follow-up filtration skips the pre-flush.
+- `water_clean_sec`: Time in seconds within which a follow-up filtration skips the pre-flush (default 5 minutes).
 - `deferred_post_flush_sec`: Delay in seconds between a filter cycle ending and the membrane post-flush running in the background. Default 30. Raise it for stationary use if you prefer the post-flush to run well after you have taken your water; lower it (e.g. 15) for portable / camper use where you want to power down shortly after filtering.
-- `buzzer_frequency`: Frequency in Hz for the buzzer tone.
-- `pump_switch_delay`: Time in milliseconds to delay pump switch actions before/after valves.
+- `buzzer_frequency`: Frequency in Hz for the buzzer tone (default 1500).
+- `pump_switch_delay`: Time in milliseconds to delay pump switch actions before/after valves (default 1000).
 - `inlet_bleed_ms`: Time in milliseconds to leave the non-inlet valves open after the pump stops, so membrane back-pressure can bleed through V2 to the drain before all valves close. Default 5000 (5 s). Increase if you hear residual pressure on the next cycle's first valve open.
 
 ## Usage

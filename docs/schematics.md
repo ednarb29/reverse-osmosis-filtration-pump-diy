@@ -57,6 +57,35 @@ The drawing also carries two recommendations that the current build does not
 have: a fuse in the +24 V line, and a supply with more headroom — the pump alone
 draws 2.8 A of the 3 A the fitted CJ-2430 provides.
 
+## Relation to the original design
+
+This project started from an upstream repository whose schematic is still in the
+tree as [images/schema.png](../images/schema.png):
+
+![Original upstream schema](../images/schema.png)
+
+That drawing documents a different machine and should not be used for rebuilding
+this one. It differs in five ways that matter:
+
+1. **No pump.** The upstream system runs on tap pressure, so it has no booster
+   pump, no pressure gauge and no recirculation loop.
+2. **Pre-filter order is reversed.** Upstream runs sediment (APEC CT-1SED) then
+   carbon (CT-24CAB); this build runs carbon then sediment, which is what the
+   AquaMichel Mini manual prescribes.
+3. **Different cartridges.** APEC CT-1SED / CT-24CAB upstream, WATER PRO IN10C /
+   IN10S here.
+4. **Valves 3 and 4 are swapped.** Upstream numbers the permeate discard valve
+   #3 and the clean-water valve #4. In `main.py` and on the hardware, V3 is clean
+   water and V4 is the discard. V1 (inlet) and V2 (flush) mean the same thing in
+   both.
+5. **Parts that only exist here:** the inlet strainer, the H₂O₂ injection point
+   after the carbon filter, the second (adjustable) restrictor in the waste line,
+   and a single merged waste outlet instead of three separate disposal paths.
+
+Point 4 is the one that bites: wiring the valves by the upstream numbering swaps
+clean water and waste on the permeate side. The photo in the README shows the
+pen markings on the brackets, which follow the numbering used in `main.py`.
+
 ## Regenerating
 
 ```bash
