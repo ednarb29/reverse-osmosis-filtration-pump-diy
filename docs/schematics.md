@@ -10,8 +10,14 @@ the two language versions are geometrically identical.
 
 | | English | Deutsch |
 |---|---|---|
-| Water-carrying parts | [hydraulic-en.svg](schematics/hydraulic-en.svg) · [PNG](../images/hydraulic-en.png) | [hydraulic-de.svg](schematics/hydraulic-de.svg) · [PNG](../images/hydraulic-de.png) |
-| Wiring | [electrical-en.svg](schematics/electrical-en.svg) · [PNG](../images/electrical-en.png) | [electrical-de.svg](schematics/electrical-de.svg) · [PNG](../images/electrical-de.png) |
+| Water-carrying parts | [SVG](schematics/hydraulic-en.svg) · [PNG](../images/hydraulic-en.png) | [SVG](schematics/hydraulic-de.svg) · [PNG](../images/hydraulic-de.png) |
+| Wiring | [SVG](schematics/electrical-en.svg) · [PNG](../images/electrical-en.png) | [SVG](schematics/electrical-de.svg) · [PNG](../images/electrical-de.png) |
+| Both, for printing | [schematics-en.pdf](schematics/schematics-en.pdf) | [schematics-de.pdf](schematics/schematics-de.pdf) |
+
+The PDFs hold both drawings on two A3 landscape pages. A3 rather than A4
+because the hydraulic drawing stops being legible when it is squeezed that
+small; printing A3 down to A4 is a checkbox in the print dialog, scaling up is
+not.
 
 ![Hydraulic schematic](../images/hydraulic-en.png)
 
@@ -89,22 +95,22 @@ pen markings on the brackets, which follow the numbering used in `main.py`.
 ## Regenerating
 
 ```bash
-python3 docs/schematics/generate.py
+python3 docs/schematics/render.py --generate
 ```
 
-That rewrites the four SVGs in `docs/schematics/`. To refresh the PNGs in
-`images/`, render each SVG at 1.25× device scale, for example with headless
-Chromium:
+`generate.py` writes the four SVGs; `render.py` then produces everything derived
+from them — the PNGs in `images/` and the two print PDFs — so the checked-in
+files stay in step with the sources. It needs a headless Chromium or Chrome on
+`PATH`; otherwise point `CHROME` at one:
 
 ```bash
-chromium --headless --disable-gpu --screenshot=images/hydraulic-en.png \
-  --window-size=1740,1640 --force-device-scale-factor=1.25 \
-  docs/schematics/hydraulic-en.svg
+CHROME=/usr/lib/chromium/chromium python3 docs/schematics/render.py --generate
 ```
 
-The electrical drawings use `--window-size=1740,1320`.
+Run `generate.py` on its own if you only want to see the SVGs change.
 
 Edit text in the `STRINGS` table at the bottom of `generate.py`; edit geometry
 in `build_hydraulic` / `build_electrical`. Keep both languages in step — the
 layout code is shared, so a string that grows too long will overflow in one
-language and not the other.
+language and not the other. `DRAWINGS` in `render.py` carries the canvas sizes,
+so change them in both places if you resize a drawing.

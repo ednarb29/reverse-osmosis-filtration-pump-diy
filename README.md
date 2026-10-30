@@ -50,7 +50,9 @@ Two drawings record the system as it is actually built — one for every
 water-carrying part, one for the wiring. Both exist in English and German and
 are generated from one script; see [docs/schematics.md](docs/schematics.md),
 which also explains how this build differs from the original design this project
-started out from.
+started out from. For printing or passing on there is a two-page PDF per
+language: [English](docs/schematics/schematics-en.pdf) ·
+[Deutsch](docs/schematics/schematics-de.pdf).
 
 ![Hydraulic schematic](images/hydraulic-en.png)
 
